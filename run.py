@@ -85,7 +85,8 @@ def main(args):
         else:
             doc_vec = np.load(os.path.join(args.output_dir, args.doc_vec_savepath))
 
-        if args.reset or not os.path.exists(os.path.join(args.output_dir, args.graph_vec_savepath)):
+        if args.relationship_graph and \
+                args.reset or not os.path.exists(os.path.join(args.output_dir, args.graph_vec_savepath)):
             from model.SINE import Config, SINE
             from util.processor_dataset import get_dataset
             from util.dataset import myDataset
@@ -185,7 +186,7 @@ if __name__ == '__main__':
                         type=str)
     parser.add_argument('--reset',
                         action='store_true')
-    parser.add_argument('--graph', action='store_true')
+    parser.add_argument('--relationship_graph', action='store_true')
     parser.add_argument('--train', action='store_true')
     parser.add_argument('--dev', action='store_true')
     parser.add_argument('--test', action='store_true')
