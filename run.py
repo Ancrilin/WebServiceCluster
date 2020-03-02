@@ -60,8 +60,8 @@ def main(args):
                 loss.backward()
                 optimizer.step()
                 total_loss += loss
-                if total_batch % 10000 == 0:
-                    logger.info('total_batch {} batch_loss {}'.format(total_batch, loss / config.batch_size))
+                # if total_batch % 10000 == 0:
+                #     logger.info('total_batch {} batch_loss {}'.format(total_batch, loss / config.batch_size))
                 if total_batch % 1000 == 0:
                     iteration.append(loss / config.batch_size)
                     n_iteration += 1
