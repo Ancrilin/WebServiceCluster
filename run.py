@@ -121,7 +121,7 @@ def main(args):
             graph_vec = np.load(os.path.join(args.output_dir, args.graph_vec_savepath))
         logger.info('graph vector shape {}'.format(np.shape(graph_vec)))
         vector = np.concatenate((args.weight * doc_vec, (1 - args.weight) * \
-                                 graph_vec), axis=1) if args.graph \
+                                 graph_vec), axis=1) if args.relationship_graph \
             else doc_vec
         vector = np.array(vector)
         logger.info('vector shape {}'.format(np.shape(vector)))
