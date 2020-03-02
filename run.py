@@ -18,8 +18,8 @@ torch.backends.cudnn.deterministic = True
 
 def main(args):
     logger.info('device {}'.format(device))
-    config = vars(args)  # 返回参数字典
-    logger.info(config)
+    dic_args = vars(args)  # 返回参数字典
+    logger.info(dic_args)
     def train_doc2vec(name, text):
         logger.info('train doc2vec...')
         doc2vec = Doc2vec(vector_size=args.doc_vec_size)
@@ -45,10 +45,13 @@ def main(args):
         n_sample = len(data_loader)
         curve_loss = []
         t_epoch = 0
+        iteration = []
+        n_iteration = 0
         for epoch in range(config.epochs):
             total_loss = 0
-            for batch in tqdm(data_loader):
-                xi, xj, xk = batch
+            for sample in tqdm(data_loader):
+                sample = (i.to(device) for i in sample)
+                xi, xj, xk = sample
                 # print('xi', xj, 'xk', xi, xj, xk)
                 model.zero_grad()
                 loss = model(xi, xj, xk)
@@ -59,15 +62,20 @@ def main(args):
                 total_loss += loss
                 if total_batch % 10000 == 0:
                     logger.info('total_batch {} batch_loss {}'.format(total_batch, loss / config.batch_size))
+                if total_batch % 1000 == 0:
+                    iteration.append(loss / config.batch_size)
+                    n_iteration += 1
                 total_batch += 1
             logger.info('Epoch [{}/{}] loss {}'.format(epoch + 1, config.epochs, total_loss / n_sample))
             curve_loss.append(total_loss / n_sample)
             t_epoch += 1
-        draw_curve(curve_loss, t_epoch, 'SINE_loss', args.output_dir)
+        draw_curve(curve_loss, t_epoch, 'SINE_loss', args.output_dir, x_label='epoch')
+        draw_curve(iteration, n_iteration, 'SINE_loss_iter', args.output_dir, x_label='iteration')
         torch.save(model.state_dict(), os.path.join(args.output_dir, 'save/sine.pkl'))
 
     def train_kmeans(dataset):
         from model.Kmeanspp import kmeans
+        logger.info('kmeans++...')
         model = kmeans(n_cluster=args.n_cluster, max_iter=args.max_iter, tol=args.tol)
         model.fit(dataset)
         cluster_label = model.label
@@ -111,7 +119,8 @@ def main(args):
         else:
             graph_vec = np.load(os.path.join(args.output_dir, args.graph_vec_savepath))
         logger.info('graph vector shape {}'.format(np.shape(graph_vec)))
-        vector = np.concatenate((doc_vec, graph_vec), axis=1) if args.graph \
+        vector = np.concatenate((args.weight * doc_vec, (1 - args.weight) * \
+                                 graph_vec), axis=1) if args.graph \
             else doc_vec
         vector = np.array(vector)
         logger.info('vector shape {}'.format(np.shape(vector)))
@@ -135,6 +144,9 @@ if __name__ == '__main__':
                         type=float)
     parser.add_argument('--alpha',
                         default=0.1,
+                        type=float)
+    parser.add_argument('--weight',
+                        default=0.7,
                         type=float)
     parser.add_argument('--tol',
                         default=1e-4,
