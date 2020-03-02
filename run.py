@@ -8,7 +8,7 @@ from tqdm import tqdm
 from logger import Logger
 import os
 from model.Doc2vec import Doc2vec
-from util.util import Preprocessor
+from util.utils import Preprocessor
 from util.visualization import draw_curve
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')

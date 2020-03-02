@@ -5,7 +5,7 @@ class Vocabulary(object):
     def __init__(self, graph):
         self._id2node = {}
         self._node2id = {}
-        self._curr_id = 1
+        self._curr_id = 0
         for node in graph.nodes():#遍历所有节点
             if node not in self._node2id:#如果该节点没有编号，加入
                 self._curr_id += 1

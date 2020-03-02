@@ -4,7 +4,7 @@ import pandas as pd
 import os
 import csv
 import networkx as nx
-from util import graph
+from util.graph import Graph
 import numpy as np
 
 
@@ -45,11 +45,11 @@ def get_dataset(filepath):
         return positive_graph, negative_graph
 
     positive_graph, negative_graph = prepare(source)
-    my_graph = graph.Graph(positive_graph, negative_graph)
+    my_graph = Graph(positive_graph, negative_graph)
     print("getting triplets...")
     del source
     triplets = my_graph.get_triplets()
-    vocab = my_graph.vocab.dict_node2id
+    vocab = my_graph.vocab.getnode2id()
     return triplets, vocab
 
 
