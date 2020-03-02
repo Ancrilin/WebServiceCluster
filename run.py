@@ -191,7 +191,7 @@ if __name__ == '__main__':
     parser.add_argument('--test', action='store_true')
 
     args = parser.parse_args()
-    os.makedirs(args.output_dir, exist_ok=True)
+    os.makedirs(os.path.join(args.output_dir, 'save'), exist_ok=True)
     os.makedirs('data', exist_ok=True)
     logger = Logger(os.path.join(args.output_dir, 'train.log'))
     main(args)
