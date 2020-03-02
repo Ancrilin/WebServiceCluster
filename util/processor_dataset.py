@@ -1,11 +1,7 @@
 import time
 from datetime import timedelta
-import pandas as pd
-import os
 import csv
 import networkx as nx
-from models.SINE import graph
-import numpy as np
 
 
 def get_time_dif(start_time):

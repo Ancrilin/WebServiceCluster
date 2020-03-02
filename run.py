@@ -9,6 +9,7 @@ from logger import Logger
 import os
 from model.Doc2vec import Doc2vec
 from util.util import Preprocessor
+from util.visualization import draw_curve
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 np.random.seed(1)
@@ -31,7 +32,7 @@ def main(args):
         logger.info('save doc2vec vector in {}'.format(os.path.join(args.output_dir, args.doc_vec_savepath)))
         np.save(os.path.join(args.output_dir, args.doc_vec_savepath), doc2vec)
         logger.info('save doc2vec model in {}'.format(os.path.join(args.output_dir, 'dov2vec.model')))
-        doc2vec.save(os.path.join(args.output_dir, 'dov2vec.model'))
+        doc2vec.save(os.path.join(args.output_dir, 'save/dov2vec.model'))
         logger.info('doc_vec shape {}'.format(np.shape(doc_vec)))
         return doc_vec
 
@@ -44,6 +45,8 @@ def main(args):
         data_loader = DataLoader(dataset, batch_size=config.batch_size, shuffle=True, num_workers=8)
         last_improve = 0
         n_sample = len(data_loader)
+        curve_loss = []
+        t_epoch = 0
         for epoch in range(config.epochs):
             total_loss = 0
             for batch in tqdm(data_loader):
@@ -60,7 +63,10 @@ def main(args):
                     logger.info('total_batch {} batch_loss {}'.format(total_batch, loss / config.batch_size))
                 total_batch += 1
             logger.info('Epoch [{}/{}] loss {}'.format(epoch + 1, config.epochs, total_loss / n_sample))
-        torch.save(model.state_dict(), 'save/sine.pkl')
+            curve_loss.append(total_loss / n_sample)
+            t_epoch += 1
+        draw_curve(curve_loss, t_epoch, 'SINE_loss', args.output_dir)
+        torch.save(model.state_dict(), os.path.join(args.output_dir, 'save/sine.pkl'))
 
     def train_kmeans(dataset):
         from model.Kmeanspp import kmeans
