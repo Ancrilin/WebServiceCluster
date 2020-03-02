@@ -183,5 +183,6 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
     os.makedirs(args.output_dir, exist_ok=True)
+    os.makedirs('data', exist_ok=True)
     logger = Logger(os.path.join(args.output_dir, 'train.log'))
     main(args)
