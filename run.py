@@ -82,7 +82,7 @@ def main(args):
         return cluster_label
 
     if args.train:
-        preprocessor = Preprocessor(config['min_time'])
+        preprocessor = Preprocessor(args.min_time)
         logger.info('load dataset...')
         all_name, all_process_cuts, all_labels, all_tags, word_map, tag_map, label_map = preprocessor.read_data(
             os.path.join(args.dataset, args.doc_datafile))
@@ -106,6 +106,7 @@ def main(args):
             config.n_vocab = len(vocab)
             config.embed = args.graph_vec_size
             config.dim = args.dim
+            config.vocab = vocab
             dataset = myDataset(triplets, config)
             sine = SINE(config).to(device)
             logger.info(sine)

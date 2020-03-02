@@ -14,6 +14,7 @@ class Config():
         self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')  # 设备
         self.alpha = 0.1                                                # 正则化参数
         self.tol = 0.5
+        self.vocab = None
 
 
 class SINE(nn.Module):
