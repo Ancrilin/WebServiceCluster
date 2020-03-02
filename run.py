@@ -1,6 +1,5 @@
 import numpy as np
 import torch
-import torch.nn.functional as F
 from torch.utils.data.dataloader import DataLoader
 import time
 import argparse
@@ -33,7 +32,6 @@ def main(args):
         np.save(os.path.join(args.output_dir, args.doc_vec_savepath), doc2vec)
         logger.info('save doc2vec model in {}'.format(os.path.join(args.output_dir, 'dov2vec.model')))
         doc2vec.save(os.path.join(args.output_dir, 'save/dov2vec.model'))
-        logger.info('doc_vec shape {}'.format(np.shape(doc_vec)))
         return doc_vec
 
     def train_sine(config, model, dataset):
@@ -42,7 +40,7 @@ def main(args):
         optimizer = torch.optim.Adam(model.parameters(), lr=config.learning_rate)  # 优化器 Adam优化算法
 
         total_batch = 0  # 记录进行到多少batch
-        data_loader = DataLoader(dataset, batch_size=config.batch_size, shuffle=True, num_workers=8)
+        data_loader = DataLoader(dataset, batch_size=config.batch_size, shuffle=True)
         last_improve = 0
         n_sample = len(data_loader)
         curve_loss = []
@@ -84,6 +82,8 @@ def main(args):
             doc_vec = train_doc2vec(all_name, all_process_cuts)
         else:
             doc_vec = np.load(os.path.join(args.output_dir, args.doc_vec_savepath))
+        doc_vec = np.array(doc_vec)
+        logger.info('doc vector shape {}'.format(np.shape(doc_vec)))
 
         if args.relationship_graph and \
                 args.reset or not os.path.exists(os.path.join(args.output_dir, args.graph_vec_savepath)):
@@ -106,12 +106,15 @@ def main(args):
             for n in all_name:
                 graph_vec.append(sine.get_embedding(n))
             graph_vec = np.array(graph_vec)
+            logger.info('graph vector shape {}'.format(np.shape(graph_vec)))
             np.save(os.path.join(args.output_dir, args.graph_vec_savepath), graph_vec)
         else:
             graph_vec = np.load(os.path.join(args.output_dir, args.graph_vec_savepath))
         logger.info('graph vector shape {}'.format(np.shape(graph_vec)))
         vector = np.concatenate((doc_vec, graph_vec), axis=1) if args.graph \
             else doc_vec
+        vector = np.array(vector)
+        logger.info('vector shape {}'.format(np.shape(vector)))
         real_label = []
         for l in all_labels:
             real_label.append(label_map[l])

@@ -37,7 +37,6 @@ def get_dataset(filepath):
                 positive_graph.add_edge(u, v, weight=w)
             if w < 0:
                 negative_graph.add_edge(u, v, weight=w)
-        print("ending preparation")
         print("positive_number_of_nodes: " + str(positive_graph.number_of_nodes()))
         print("positive_number_of_edges: " + str(positive_graph.number_of_edges()))
         print("negative_number_of_nodes: " + str(negative_graph.number_of_nodes()))
