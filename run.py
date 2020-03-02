@@ -64,7 +64,7 @@ def main(args):
 
     def train_kmeans(dataset):
         from model.Kmeanspp import kmeans
-        model = kmeans(n_cluster=args.n_cluster)
+        model = kmeans(n_cluster=args.n_cluster, max_iter=args.max_iter, tol=args.tol)
         model.fit(dataset)
         cluster_label = model.label
         return cluster_label
@@ -126,6 +126,9 @@ if __name__ == '__main__':
     parser.add_argument('--alpha',
                         default=0.1,
                         type=float)
+    parser.add_argument('--tol',
+                        default=1e-4,
+                        type=float)
     parser.add_argument('--dim',
                         default=512,
                         type=int)
@@ -151,7 +154,7 @@ if __name__ == '__main__':
                         required=True,
                         choices={'data'})
     parser.add_argument('--doc_vec_size',
-                        default=50,
+                        default=500,
                         type=int)
     parser.add_argument('--graph_vec_size',
                         default=200,
