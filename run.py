@@ -62,7 +62,7 @@ def main(args):
                 total_loss += loss
                 # if total_batch % 10000 == 0:
                 #     logger.info('total_batch {} batch_loss {}'.format(total_batch, loss / config.batch_size))
-                if total_batch % 1000 == 0:
+                if total_batch % 10000 == 0:
                     iteration.append(loss / config.batch_size)
                     n_iteration += 1
                 total_batch += 1
@@ -103,6 +103,7 @@ def main(args):
             config.device = device
             config.epochs = args.graph_n_epoch
             config.batch_size = args.batch_size
+            config.learning_rate = args.learning_rate
             config.n_vocab = len(vocab)
             config.embed = args.graph_vec_size
             config.dim = args.dim
@@ -164,6 +165,9 @@ if __name__ == '__main__':
     parser.add_argument('--batch_size',
                         default=32,
                         type=int)
+    parser.add_argument('--learning_rate',
+                         default=1e-3,
+                         type=float)
     parser.add_argument('--graph_lr',
                         default=1e-3,
                         type=float)
