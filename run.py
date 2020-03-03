@@ -69,9 +69,9 @@ def main(args):
             logger.info('Epoch [{}/{}] loss {}'.format(epoch + 1, config.epochs, total_loss / n_sample))
             curve_loss.append(total_loss / n_sample)
             t_epoch += 1
-        draw_curve(curve_loss, t_epoch, 'SINE_loss', args.output_dir, x_label='epoch')
-        draw_curve(iteration, n_iteration, 'SINE_loss_iter', args.output_dir, x_label='iteration')
-        torch.save(model.state_dict(), os.path.join(args.output_dir, 'save/sine.pkl'))
+            draw_curve(curve_loss, t_epoch, 'SINE_loss', args.output_dir, x_label='epoch')
+            draw_curve(iteration, n_iteration, 'SINE_loss_iter', args.output_dir, x_label='iteration')
+            torch.save(model.state_dict(), os.path.join(args.output_dir, 'save/sine.pkl'))
 
     def train_kmeans(dataset):
         from model.Kmeanspp import kmeans
@@ -206,6 +206,9 @@ if __name__ == '__main__':
                         type=str)
     parser.add_argument('--reset',
                         action='store_true')
+    parser.add_argument('--continue',
+                        action='store_true',
+                        help='continue the previous training')
     parser.add_argument('--relationship_graph', action='store_true')
     parser.add_argument('--train', action='store_true')
     parser.add_argument('--dev', action='store_true')
