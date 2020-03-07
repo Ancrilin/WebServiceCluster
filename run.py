@@ -71,7 +71,7 @@ def main(args):
             t_epoch += 1
             draw_curve(curve_loss, t_epoch, 'SINE_loss', args.output_dir, x_label='epoch')
             draw_curve(iteration, n_iteration, 'SINE_loss_iter', args.output_dir, x_label='iteration')
-            torch.save(model.state_dict(), os.path.join(args.output_dir, 'save/sine.pkl'))
+        torch.save(model.state_dict(), os.path.join(args.output_dir, 'save/sine.pkl'))
 
     def train_kmeans(dataset):
         from model.Kmeanspp import kmeans
