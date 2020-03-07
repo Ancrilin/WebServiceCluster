@@ -28,8 +28,8 @@ class SINE(nn.Module):
         self.layer2 = nn.Linear(config.dim, 1, bias=False)  # 第二层隐藏层
         self.bias1 = nn.Parameter(torch.zeros(1), requires_grad=True)
         self.bias2 = nn.Parameter(torch.zeros(1), requires_grad=True)
-        self.register_parameter('bias1', self.bias1)
-        self.register_parameter('bias2', self.bias2)
+        # self.register_parameter('bias1', self.bias1)
+        # self.register_parameter('bias2', self.bias2)
         self.tanh = nn.Tanh()
 
     def forward(self, xi, xj, xk):
